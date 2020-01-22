@@ -108,6 +108,7 @@ class WebServer(object):
                             f = open('./' + i, 'rb')
                             self.response_data = f.read()
                             self.response_data = self.response_data.decode()
+                            print(self.response_data)
                             self.content_length = len(self.response_data)
                             f.close()
                             response_header = self._generate_headers(200)
@@ -141,7 +142,7 @@ class WebServer(object):
                 response += self.response_data
                 response = response.encode()
 
-                client.send(response)
+                client.sendall(response)
                 client.close()
                 break
             else:

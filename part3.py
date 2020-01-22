@@ -169,7 +169,7 @@ class WebServer(object):
                 response = response_header.encode()
                 response += self.response_data
 
-                client.send(response)
+                client.sendall(response)
                 client.close()
                 break
             else:
@@ -182,5 +182,4 @@ if __name__ == "__main__":
     port = input()
     server = WebServer(int(port))
     server.start_multiple()
-    print("Pr"
-          "ess Ctrl+C to shut down server.")
+    print("Press Ctrl+C to shut down server.")
