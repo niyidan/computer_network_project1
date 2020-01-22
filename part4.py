@@ -54,8 +54,8 @@ class WebServer(object):
                       'Content-Length: {length}\n'.format(length=self.content_length) + \
                       'Connection: close\n' + \
                       'Content-Type: text/html; charset=UTF-8\n\n'
-        elif response_code == 403:
-            header += 'HTTP/1.0 403 Forbidden\n' + \
+        elif response_code == 400:
+            header += 'HTTP/1.0 400 Operand not number\n' + \
                       'Date: {now}\n'.format(now=time_now) + \
                       'Server: Simple-Python-Server\n' + \
                       'Content-Length: {length}\n'.format(length=self.content_length) + \
@@ -94,6 +94,7 @@ class WebServer(object):
         print("Request Body: {b}".format(b=data))
         query = data.split(' ')[1]
         operation = query.split('?')[0]
+        response_code = 200
         # not product, return 404
         if operation != '/product':
             response_code = 404
@@ -108,8 +109,12 @@ class WebServer(object):
         result = 1
         for i in operand:
             result *= i
-        print(json.dumps({'operation': "product", 'operands': operand, 'result': result}, sort_keys=True, indent=4))
-
+        response = self._generate_headers(response_code)
+        answer = json.dumps({'operation': "product", 'operands': operand, 'result': result}, sort_keys=True, indent=4)
+        if response_code == 200:
+            response += answer
+        response = response.encode()
+        client.send(response)
         client.close()
 
 
