@@ -115,10 +115,10 @@ class WebServer(object):
                             print("File forbidden. Serving 403 page.", file=sys.stderr)
                             self.response_data = '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">\n' + \
                                                  '<html><head>\n' + \
-                                                 '<title>404 Not Found</title>\n' + \
+                                                 '<title>403 Forbidden</title>\n' + \
                                                  '</head><body>\n' + \
-                                                 '<h1>Not Found</h1>\n' + \
-                                                 '<p>The requested URL {} was not found on this server.</p>\n'.format(
+                                                 '<h1>Forbidden</h1>\n' + \
+                                                 '<p>The requested URL {} was forbidden on this server.</p>\n'.format(
                                                      self.file_requested) + \
                                                  '</body></html>\n\n'
                             self.content_length = len(self.response_data)
@@ -128,10 +128,10 @@ class WebServer(object):
                     print("File not found. Serving 404 page.", file=sys.stderr)
                     self.response_data = '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">\n' + \
                                          '<html><head>\n' + \
-                                         '<title>403 Forbidden</title>\n' + \
+                                         '<title>404 Not found</title>\n' + \
                                          '</head><body>\n' + \
-                                         '<h1>Forbidden</h1>\n' + \
-                                         '<p>The requested URL {} was forbidden on this server.</p>\n'.format(
+                                         '<h1>Not found</h1>\n' + \
+                                         '<p>The requested URL {} was not found on this server.</p>\n'.format(
                                              self.file_requested) + \
                                          '</body></html>\n\n'
                     self.content_length = len(self.response_data)
