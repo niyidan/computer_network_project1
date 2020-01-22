@@ -48,9 +48,10 @@ class client(object):
             buff += data_tmp
             if data_tmp == '': break
         data = buff.split("\r\n")
+        htmlbegin = 0
         for i in range(len(data)):
-            if data[i] == '':
-                htmlbegin = i + 1
+            if data[i].split(': ')[0] == 'Content-Type':
+                htmlbegin = i + 2
                 break
         for i in range(htmlbegin, len(data)):
             print(data[i], end='\n')

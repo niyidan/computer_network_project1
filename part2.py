@@ -30,7 +30,6 @@ class WebServer(object):
 
         self._listen() # Start listening for connections
 
-
     def _generate_headers(self, response_code):
         """
         Generate HTTP response headers.
@@ -76,7 +75,6 @@ class WebServer(object):
             print("Recieved connection from {addr}".format(addr=address))
             self._handle_client(client, address)
 
-
     def _handle_client(self, client, address):
         """
         Main loop for handling connecting clients and serving files from content_dir
@@ -99,19 +97,13 @@ class WebServer(object):
             if request_method == "GET":
                 # Ex) "GET /index.html" split on space
                 self.file_requested = data.split(' ')[1]
-                print(self.file_requested)
 
                 filepath_to_serve = '.' + self.file_requested
                 filename = self.file_requested.split('.')[0][1:]
-                print(self.file_requested)
-                print(filename)
                 ff = os.listdir(self.file_path)
-                print(ff)
                 print("Serving web page [{fp}]".format(fp=filepath_to_serve))
                 for i in ff:
-                    print(i)
                     if i.split('.')[0] == filename:
-                        print('A')
                         if i.split('.')[1] == 'html' or i.split('.')[1] == 'htm':
                             f = open('./' + i, 'rb')
                             self.response_data = f.read()
@@ -144,7 +136,6 @@ class WebServer(object):
                                          '</body></html>\n\n'
                     self.content_length = len(self.response_data)
                     response_header = self._generate_headers(404)
-
 
                 response = response_header
                 response += self.response_data
