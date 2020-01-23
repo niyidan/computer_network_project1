@@ -114,7 +114,7 @@ class WebServer(object):
                         sys.stderr.write('Terminated by Ctrl + C\n')
                         sys.exit(1)
                     except:
-                        sys.stderr.write('error occured, please try again\n')
+                        # sys.stderr.write('error occured, please try again\n')
                         socket.close()
                         inputs.remove(socket)
 
@@ -155,6 +155,7 @@ class WebServer(object):
                 try:
                     f = open(filepath_to_serve, 'rb')
                     self.response_data = f.read()
+                    #print(self.response_data)
                     self.content_length = len(self.response_data)
                     f.close()
                     response_header = self._generate_headers(200)
@@ -166,10 +167,11 @@ class WebServer(object):
                     if request_method == "GET":  # Temporary 404 Response Page
                         self.response_data = b"<h1>404 Not Found</h1>"
 
-                response = response_header.encode()
+                response = response_header
                 response += self.response_data
+                response.encode()
 
-                client.send(response)
+                client.sendall(response)
                 client.close()
                 break
             else:
@@ -179,8 +181,11 @@ class WebServer(object):
 if __name__ == "__main__":
     # signal.signal(signal.SIGINT, shutdownServer)
     port = sys.argv[1]
+<<<<<<< HEAD
 #     port = input()
+=======
+    #port = input()
+>>>>>>> b10585543ed1c466dec256a8a85be2aac6e1b050
     server = WebServer(int(port))
     server.start_multiple()
-    print("Pr"
-          "ess Ctrl+C to shut down server.")
+    print("Press Ctrl+C to shut down server.")

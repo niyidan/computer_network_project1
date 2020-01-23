@@ -108,11 +108,12 @@ class WebServer(object):
                             f = open('./' + i, 'rb')
                             self.response_data = f.read()
                             self.response_data = self.response_data.decode()
+                            # print(self.response_data)
                             self.content_length = len(self.response_data)
                             f.close()
                             response_header = self._generate_headers(200)
                         else:
-                            print("File forbidden. Serving 403 page.", file=sys.stderr)
+
                             self.response_data = '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">\n' + \
                                                  '<html><head>\n' + \
                                                  '<title>403 Forbidden</title>\n' + \
@@ -122,10 +123,11 @@ class WebServer(object):
                                                      self.file_requested) + \
                                                  '</body></html>\n\n'
                             self.content_length = len(self.response_data)
+                            print("File forbidden. Serving 403 page.", file=sys.stderr)
                             response_header = self._generate_headers(403)
                         break
                 else:
-                    print("File not found. Serving 404 page.", file=sys.stderr)
+
                     self.response_data = '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">\n' + \
                                          '<html><head>\n' + \
                                          '<title>404 Not found</title>\n' + \
@@ -135,13 +137,14 @@ class WebServer(object):
                                              self.file_requested) + \
                                          '</body></html>\n\n'
                     self.content_length = len(self.response_data)
+                    print("File not found. Serving 404 page.", file=sys.stderr)
                     response_header = self._generate_headers(404)
 
                 response = response_header
                 response += self.response_data
                 response = response.encode()
 
-                client.send(response)
+                client.sendall(response)
                 client.close()
                 break
             else:

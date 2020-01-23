@@ -123,10 +123,13 @@ class WebServer(object):
             result = 1
             for i in operand:
                 result *= i
+<<<<<<< HEAD
             if result > sys.float_info.max:
                 result = "inf"
             elif result < -sys.float_info.min:
                 result = "-inf"
+=======
+>>>>>>> b10585543ed1c466dec256a8a85be2aac6e1b050
             response = self._generate_headers(response_code)
             answer = json.dumps({'operation': "product", 'operands': operand, 'result': result}, indent=4)
             if response_code == 200:
