@@ -149,7 +149,8 @@ class WebServer(object):
 
 
 if __name__ == "__main__":
-    port = int(sys.argv[1])
+    # port = int(sys.argv[1])
+    port = int(input())
     server = WebServer(port)
     server.start()
     print("Press Ctrl+C to shut down server.")

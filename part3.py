@@ -102,7 +102,7 @@ class WebServer(object):
                     # print()
                     client_socket, client_info = self.server_socket.accept()
                     client_socket.setblocking(0)
-                    # client_socket.settimeout(60)
+                    client_socket.settimeout(60)
                     print(f"Client: {client_info} is connected.")
                     inputs.append(client_socket)
                 else:
@@ -178,8 +178,8 @@ class WebServer(object):
 
 if __name__ == "__main__":
     # signal.signal(signal.SIGINT, shutdownServer)
-    # port = sys.argv[1]
-    port = input()
+    port = sys.argv[1]
+#     port = input()
     server = WebServer(int(port))
     server.start_multiple()
     print("Pr"

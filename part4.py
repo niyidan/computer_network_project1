@@ -39,6 +39,7 @@ class WebServer(object):
             A formatted HTTP header for the given response_code
         """
         header = ''
+        self.content_length = 512
         time_now = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
         if response_code == 200:
             header += 'HTTP/1.0 200 OK\n' + \
@@ -75,6 +76,14 @@ class WebServer(object):
             print("Recieved connection from {addr}".format(addr=address))
             self._handle_client(client, address)
 
+    def isfloat(self, number):
+        try:
+            float(number)
+            return True
+        except:
+            return False
+
+
     def _handle_client(self, client, address):
         """
         Main loop for handling connecting clients and serving files from content_dir
@@ -83,39 +92,49 @@ class WebServer(object):
             - address: socket address from accept()
         """
         PACKET_SIZE = 4096
+        buff = ''
         while True:
-            print("CLIENT", client)
-            data = client.recv(PACKET_SIZE).decode()  # Recieve data packet from client and decode
+            data_tmp = client.recv(PACKET_SIZE)  # 收到server返回的html
+            data_tmp = data_tmp.decode('utf-8', 'ignore')
+            buff += data_tmp
+            if data_tmp == '': break
 
-            if not data: break
+            data = buff.split("\r\n")
+            print(data)
 
-        request_method = data.split(' ')[0]
-        print("Method: {m}".format(m=request_method))
-        print("Request Body: {b}".format(b=data))
-        query = data.split(' ')[1]
-        operation = query.split('?')[0]
-        response_code = 200
-        # not product, return 404
-        if operation != '/product':
-            response_code = 404
-        tmp = data.split('?')[1].split('&')
-        operand = []
-        for i in tmp:
-            tmp_operand = i.split('=')[1]
-            # operand not digit, return 400
-            if not tmp_operand.isdigit():
-                response_code = 400
-            operand.append(int(i.split('=')[1]))
-        result = 1
-        for i in operand:
-            result *= i
-        response = self._generate_headers(response_code)
-        answer = json.dumps({'operation': "product", 'operands': operand, 'result': result}, sort_keys=True, indent=4)
-        if response_code == 200:
-            response += answer
-        response = response.encode()
-        client.send(response)
-        client.close()
+            request_method = data[0].split(' ')[0]
+            print("Method: {m}".format(m=request_method))
+            print("Request Body: {b}".format(b=data))
+            query = data[0].split(' ')[1]
+            operation = query.split('?')[0]
+            response_code = 200
+            # not product, return 404
+            if operation != '/product':
+                response_code = 404
+            tmp = query.split('?')[1].split('&')
+            operand = []
+            for i in tmp:
+                tmp_operand = i.split('=')[1]
+                # operand not digit, return 400
+                if not self.isfloat(tmp_operand):
+                    print(tmp_operand)
+                    response_code = 400
+                operand.append(float(i.split('=')[1]))
+            result = 1
+            for i in operand:
+                result *= i
+            if result > sys.float_info.max:
+                result = "inf"
+            elif result < -sys.float_info.min:
+                result = "-inf"
+            response = self._generate_headers(response_code)
+            answer = json.dumps({'operation': "product", 'operands': operand, 'result': result}, indent=4)
+            if response_code == 200:
+                response += answer
+            response = response.encode()
+            client.sendall(response)
+            client.close()
+            break
 
 
 if __name__ == "__main__":
