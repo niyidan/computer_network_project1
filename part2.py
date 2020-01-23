@@ -97,6 +97,7 @@ class WebServer(object):
             if request_method == "GET":
                 # Ex) "GET /index.html" split on space
                 self.file_requested = data.split(' ')[1]
+                suffix = self.file_requested.split('.')[1]
 
                 filepath_to_serve = '.' + self.file_requested
                 filename = self.file_requested.split('.')[0][1:]
@@ -104,7 +105,7 @@ class WebServer(object):
                 print("Serving web page [{fp}]".format(fp=filepath_to_serve))
                 for i in ff:
                     if i.split('.')[0] == filename:
-                        if i.split('.')[1] == 'html' or i.split('.')[1] == 'htm':
+                        if suffix == 'html' or suffix == 'htm':
                             f = open('./' + i, 'rb')
                             self.response_data = f.read()
                             self.response_data = self.response_data.decode()
@@ -113,7 +114,6 @@ class WebServer(object):
                             f.close()
                             response_header = self._generate_headers(200)
                         else:
-
                             self.response_data = '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">\n' + \
                                                  '<html><head>\n' + \
                                                  '<title>403 Forbidden</title>\n' + \
@@ -127,7 +127,6 @@ class WebServer(object):
                             response_header = self._generate_headers(403)
                         break
                 else:
-
                     self.response_data = '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">\n' + \
                                          '<html><head>\n' + \
                                          '<title>404 Not found</title>\n' + \
@@ -152,8 +151,8 @@ class WebServer(object):
 
 
 if __name__ == "__main__":
-    # port = int(sys.argv[1])
-    port = int(input())
+    port = int(sys.argv[1])
+    #port = int(input())
     server = WebServer(port)
     server.start()
     print("Press Ctrl+C to shut down server.")

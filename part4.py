@@ -47,7 +47,7 @@ class WebServer(object):
                       'Server: Simple-Python-Server\n' + \
                       'Content-Length: {length}\n'.format(length=self.content_length) + \
                       'Connection: close\n' + \
-                      'Content-Type: text/html; charset=UTF-8\n\n'
+                      'Content-Type: application/json; charset=UTF-8\n\n'
         elif response_code == 404:
             header += 'HTTP/1.0 404 Not Found\n' + \
                       'Date: {now}\n'.format(now=time_now) + \
@@ -119,17 +119,15 @@ class WebServer(object):
                 if not self.isfloat(tmp_operand):
                     print(tmp_operand)
                     response_code = 400
-                operand.append(float(i.split('=')[1]))
+                else:
+                    operand.append(float(i.split('=')[1]))
             result = 1
             for i in operand:
                 result *= i
-<<<<<<< HEAD
             if result > sys.float_info.max:
                 result = "inf"
             elif result < -sys.float_info.min:
                 result = "-inf"
-=======
->>>>>>> b10585543ed1c466dec256a8a85be2aac6e1b050
             response = self._generate_headers(response_code)
             answer = json.dumps({'operation': "product", 'operands': operand, 'result': result}, indent=4)
             if response_code == 200:

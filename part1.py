@@ -70,7 +70,7 @@ class client(object):
                     redirect_s = client(location, self.redirect_count)
                     redirect_s.start()
         if int(status) >= 400:  # not found
-            print("Error: Page not found", file=sys.stderr)
+            # print("Error: Page not found", file=sys.stderr)
             sys.exit(3)
         s.close()
 

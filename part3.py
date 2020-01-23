@@ -102,7 +102,7 @@ class WebServer(object):
                     # print()
                     client_socket, client_info = self.server_socket.accept()
                     client_socket.setblocking(0)
-                    client_socket.settimeout(60)
+                    # client_socket.settimeout(60)
                     print(f"Client: {client_info} is connected.")
                     inputs.append(client_socket)
                 else:
@@ -114,7 +114,7 @@ class WebServer(object):
                         sys.stderr.write('Terminated by Ctrl + C\n')
                         sys.exit(1)
                     except:
-                        # sys.stderr.write('error occured, please try again\n')
+                        sys.stderr.write('error occured, please try again\n')
                         socket.close()
                         inputs.remove(socket)
 
@@ -155,7 +155,6 @@ class WebServer(object):
                 try:
                     f = open(filepath_to_serve, 'rb')
                     self.response_data = f.read()
-                    #print(self.response_data)
                     self.content_length = len(self.response_data)
                     f.close()
                     response_header = self._generate_headers(200)
@@ -167,9 +166,8 @@ class WebServer(object):
                     if request_method == "GET":  # Temporary 404 Response Page
                         self.response_data = b"<h1>404 Not Found</h1>"
 
-                response = response_header
+                response = response_header.encode()
                 response += self.response_data
-                response.encode()
 
                 client.sendall(response)
                 client.close()
@@ -181,11 +179,7 @@ class WebServer(object):
 if __name__ == "__main__":
     # signal.signal(signal.SIGINT, shutdownServer)
     port = sys.argv[1]
-<<<<<<< HEAD
-#     port = input()
-=======
-    #port = input()
->>>>>>> b10585543ed1c466dec256a8a85be2aac6e1b050
+    # port = input()
     server = WebServer(int(port))
     server.start_multiple()
     print("Press Ctrl+C to shut down server.")
